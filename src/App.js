@@ -3,6 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Book from './components/Book.js'
 import Bookshelf from './components/Bookshelf.js'
+import PropTypes from 'prop-types'
 
 class BooksApp extends React.Component {
   state = {
@@ -13,38 +14,36 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     books:[],
-    currentlyReading:[],
-    wantToRead:[],
-    read:[],
     showSearchPage: false
   }
-
-
-  componentDidMount(){
+  //Fetch all books 
+   fetchAllBooks = () => {
     BooksAPI.getAll().then((books) => {
       this.setState({books})
     })
   }
 
-  // componentDidMount(){
-  //   BooksAPI.getAll().then((books) => {
-  //     this.setState({currentlyReadingBooks: this.state.books.filter(books => books.shelf === 'currentlyReading')})
-  //   })
-  // }
+  componentDidMount(){
+    this.fetchAllBooks()
+  }
 
-  // function chnageShelf () {
-  //   if (allBooks.shelf )
-  // }
+  //change self
+
+  handleBookStatusChange = (book, shelf) => {
+    BooksAPI.update( book, shelf).then(() => {
+      this.fetchAllBooks()
+    }) 
+  }
 
   render() {
     const allBooks = this.state.books;
-    //const currentlyReadingBooks = this.state.currentlyReadingBooks;
-    const currentlyReadingBooks = allBooks.filter(book => book.shelf === 'currentlyReading')
+    //const currentlyReading = this.state.currentlyReading;
+    const currentlyReading = allBooks.filter(book => book.shelf === 'currentlyReading')
     const wantToRead =  allBooks.filter(book => book.shelf === 'wantToRead')
     const read =  allBooks.filter(book => book.shelf === 'read')
       
     // console.log(allBooks)
-    // console.log(currentlyReadingBooks)
+    // console.log(currentlyReading)
     // console.log(wantToRead)
     // console.log(read)
 
@@ -64,7 +63,6 @@ class BooksApp extends React.Component {
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
                 <input type="text" placeholder="Search by title or author"/>
-
               </div>
             </div>
             <div className="search-books-results">
@@ -78,9 +76,18 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <Bookshelf title="Currently Reading" books={currentlyReadingBooks} />
-                <Bookshelf title="Want to Read" books={wantToRead} />
-                <Bookshelf title="Read" books={read} />
+                <Bookshelf 
+                    title="Currently Reading" 
+                    books={currentlyReading} 
+                    handleBookStatusChange = {this.handleBookStatusChange} />
+                <Bookshelf 
+                    title="Want to Read" 
+                    books={wantToRead} 
+                    handleBookStatusChange = {this.handleBookStatusChange} />
+                <Bookshelf 
+                    title="Read" 
+                    books={read} 
+                    handleBookStatusChange = {this.handleBookStatusChange} />
               </div>
             </div>
             <div className="open-search">
