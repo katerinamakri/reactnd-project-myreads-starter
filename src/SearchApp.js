@@ -2,34 +2,52 @@ import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.js'
 import Book from './components/Book.js'
+import Bookshelf from './components/Bookshelf.js'
 import PropTypes from 'prop-types'
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
+// import escapeRegExp from 'escape-string-regexp'
+// import sortBy from 'sort-by'
 import { Link } from 'react-router-dom'
 
 class SearchApp extends Component {
 
-	state = {
-		query:''
+	constructor(props) {
+	    super(props)
+
+	    this.state = {
+			query:'',
+			books:[]
+		}
+	}
+
+	
+	static propTypes = {
+		books:PropTypes.array.isRequired,
+		handleBookStatusChange:PropTypes.func.isRequired
 	}
 
 	updateQuery = (query) => {
-		this.setState({ query: query.trim() })
-	}
+    	if (!query) {
+      		this.setState({query: '', books: [] })
+    	} else {
+        	this.setState({query: query.trim() })
+     }
+
+        BooksAPI.search(query).then((books) => {
+          if (books.error) {
+            this.setState({books: [] })
+          }
+
+          books.map(book => (this.props.books.filter((result) => result.id === book.id).map(result => book.shelf = result.shelf)))
+          this.setState({ books })  
+        })
+    }
+
+    updateShelf = (book, shelf) => {
+    	this.props.handleBookStatusChange(book,shelf)
+    }
 
 
 	render() {
-		let showingBooks
-		if (this.state.query) {
-			const match = new RegExp(escapeRegExp(this.state.query), 'i')
-			showingBooks = this.props.books.filter((book) => match.test(book.title))
-			console.log(showingBooks)
-		} else {
-			showingBooks = this.props.books
-		}
-
-		showingBooks.sort(sortBy('title'))
-		// console.log(books)
 
 		return (
 			<div className="search-books">
@@ -39,7 +57,7 @@ class SearchApp extends Component {
 			            <input 
 		                	type="text" 
 		                	placeholder="Search by title or author"
-		                	value ={this.state.query}
+		                	// value ={this.state.query}
 		                	onChange={(event) => this.updateQuery(event.target.value)}
 			            />
 		            </div>
@@ -47,12 +65,13 @@ class SearchApp extends Component {
 
 	            <div className="search-books-results">
 		            <ol className="books-grid">	
-	            		{showingBooks.map( book => (
+	            		{this.state.books.map( book => (
 	            		<li key={book.id}>
 	            			<Book 
 	            				book={book}
 	            				image={book.imageLinks.smallThumbnail}
-	            				handleFunction={this.handleBookStatusChange}
+	            				handleBookStatusChange={this.props.handleBookStatusChange}
+
 	               			/>
 	            		</li>
 	        			))}	               			

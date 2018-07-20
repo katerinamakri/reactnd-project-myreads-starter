@@ -12,7 +12,7 @@ class BooksApp extends React.Component {
   state = {
     books:[]
   }
-  
+
   //Fetch all books 
    fetchAllBooks = () => {
     BooksAPI.getAll().then((books) => {
@@ -29,6 +29,7 @@ class BooksApp extends React.Component {
     BooksAPI.update( book, shelf).then(() => {
       this.fetchAllBooks()
     }) 
+    console.log("function is called")
   }
 
   render() {
@@ -75,6 +76,7 @@ class BooksApp extends React.Component {
             </div>
           </div>
         )}/>
+
      </div>
     )
   }
