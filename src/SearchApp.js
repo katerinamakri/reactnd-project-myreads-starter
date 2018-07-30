@@ -24,21 +24,22 @@ class SearchApp extends Component {
 		books:PropTypes.array.isRequired,
 		handleBookStatusChange:PropTypes.func.isRequired
 	}
+	
 
 	updateQuery = (query) => {
     	if (!query) {
       		this.setState({query: '', books: [] })
     	} else {
         	this.setState({query: query.trim() })
-     }
+    	}
 
         BooksAPI.search(query).then((books) => {
-          if (books.error) {
-            this.setState({books: [] })
-          }
+	        if (books.error) {
+	          this.setState({books: [] })
+	        }	
 
-          books.map(book => (this.props.books.filter((result) => result.id === book.id).map(result => book.shelf = result.shelf)))
-          this.setState({ books })  
+	        books.map(book => (this.props.books.filter((result) => result.id === book.id).map(result => book.shelf = result.shelf)))
+	        this.setState({ books })  
         })
     }
 
@@ -69,9 +70,8 @@ class SearchApp extends Component {
 	            		<li key={book.id}>
 	            			<Book 
 	            				book={book}
-	            				image={book.imageLinks.smallThumbnail}
+	            				// image={book.imageLinks.smallThumbnail}
 	            				handleBookStatusChange={this.props.handleBookStatusChange}
-
 	               			/>
 	            		</li>
 	        			))}	               			
