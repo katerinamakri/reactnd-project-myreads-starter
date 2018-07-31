@@ -1,7 +1,5 @@
-import React,{ Component }  from 'react'
+import React  from 'react'
 import Book from './Book.js'
-import PropTypes from 'prop-types'
-
 
 function Bookshelf (props) {
 
@@ -13,8 +11,7 @@ function Bookshelf (props) {
 		            	{props.books.map( (book) => (
 		            		<li key={book.id}>
 		            			<Book 
-		            				book={book}
-		            				// image={book.imageLinks.smallThumbnail}
+		            				book={book}		            				
 		            				handleBookStatusChange={props.handleBookStatusChange}
 		               			/>
 		            		</li>
@@ -23,7 +20,6 @@ function Bookshelf (props) {
 	           </div>
 	        </div>
 	    )
-	// }	
 }
 
 export default Bookshelf

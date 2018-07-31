@@ -1,12 +1,9 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
-import { Route } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Route, Link  } from 'react-router-dom'
 import './App.css'
-import Book from './components/Book.js'
 import Bookshelf from './components/Bookshelf.js'
 import SearchApp from './SearchApp.js'
-import PropTypes from 'prop-types'
 
 class BooksApp extends React.Component {
   state = {
@@ -20,33 +17,27 @@ class BooksApp extends React.Component {
     })
   }
 
+  //is invoked to dynamically fetch data
   componentDidMount(){
     this.fetchAllBooks()
   }
 
-  //change shelves
+  //updates book status
   handleBookStatusChange = (book, shelf) => {
     BooksAPI.update( book, shelf).then(() => {
       this.fetchAllBooks()
     }) 
-    console.log("function is called")
   }
 
   render() {
     const allBooks = this.state.books;
-    //const currentlyReading = this.state.currentlyReading;
     const currentlyReading = allBooks.filter(book => book.shelf === 'currentlyReading')
     const wantToRead =  allBooks.filter(book => book.shelf === 'wantToRead')
     const read =  allBooks.filter(book => book.shelf === 'read')
       
-    // console.log(allBooks)
-    // console.log(currentlyReading)
-    // console.log(wantToRead)
-    // console.log(read)
-
     return (
       <div className="app">
-        <Route path="/search" render={() => (
+        <Route exact path="/search" render={() => (
           <SearchApp books={allBooks}  handleBookStatusChange = {this.handleBookStatusChange}/>
         )}/>
 

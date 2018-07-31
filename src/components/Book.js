@@ -1,30 +1,17 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
 
 class Book extends Component {
 
-	constructor(props) {
-	    super(props)
-	    this.changeShelf = this.changeShelf.bind(this)
-    }
-
-	changeShelf (event) {
-	    const shelf = event.target.value
-	    this.props.handleBookStatusChange(this.props.book, shelf)
-    }	
-
 	render(){
-	const { book,  handleBookStatusChange} = this.props;
+	const { book} = this.props;
 	const imageURL = `url('${book.imageLinks === undefined ? 'no image' : book.imageLinks.smallThumbnail}')`
-
 
 	 	return  (
 			<div className="book">
 			    <div className="book-top">
 			      <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: imageURL }}></div>
 			      <div className="book-shelf-changer">
-			        <select value={book.shelf ? book.shelf : 'none'} onChange = {this.changeShelf} >
+			        <select value={book.shelf ? book.shelf : 'none'} onChange = {(event) => this.props.handleBookStatusChange(this.props.book, event.target.value)} >
 			          <option value="moveto" disabled>Move to...</option>
 			          <option value="currentlyReading">Currently Reading</option>
 			          <option value="wantToRead">Want to Read</option>
