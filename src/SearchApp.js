@@ -21,7 +21,7 @@ class SearchApp extends Component {
 	
 	updateQuery = (query) => {
     	if (query) {
-        	this.setState({query: query.trim() })
+        	this.setState({query})
 	       
 	        BooksAPI.search(query).then((booksResults) => {
 			    
